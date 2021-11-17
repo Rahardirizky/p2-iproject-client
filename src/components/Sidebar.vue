@@ -10,8 +10,6 @@
       <div class="sidebar-container">
         <Button :onClick="redirect('/')" :title="'Orders'"> </Button>
         <div class="sidebar-menu"></div>
-        <Button :onClick="redirect('/addOrders')" :title="'Add Order'"> </Button>
-        <div class="sidebar-menu"></div>
         <Button :onClick="logout" :title="'logout'"> </Button>
       </div>
     </b-sidebar>

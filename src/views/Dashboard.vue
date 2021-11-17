@@ -1,13 +1,28 @@
 <template>
   <div style="background-color: #005792; height: 100vh; width: 100vw">
     <div
-      style="display: flex; margin-bottom: 30px; justify-content: space-between"
+      style="
+        display: flex;
+        margin-bottom: 30px;
+        justify-content: space-between;
+        align-items: center;
+      "
     >
       <b-button style="margin-right: 50px" v-b-toggle.sidebar-backdrop
         ><b-icon icon="arrow-right-square" font-scale="2.0"></b-icon
       ></b-button>
       <h1 style="font-weight: bold; color: white">Laundry`s Work</h1>
-      <div style="width: 10px; height: 10px"></div>
+      <div>
+        <form @submit.prevent="search" style="display: flex">
+          <b-form-input
+            v-model="email"
+            placeholder="Search by Email"
+          ></b-form-input>
+          <div style="margin-left: 20px">
+            <Button :title="'Search'" :onClick="search"> </Button>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="card-container">
       <Card v-for="order in orders" :key="order.id" :order="order"> </Card>
@@ -35,6 +50,7 @@
 import { BIcon } from "bootstrap-vue";
 import Card from "../components/Card.vue";
 import CardAdd from "../components/CardAdd.vue";
+import Button from "../components/Button.vue";
 
 export default {
   name: "Dashboard",
@@ -42,9 +58,10 @@ export default {
     return {
       currentPage: 1,
       limit: 4,
+      email: "",
     };
   },
-  components: { Card, BIcon, CardAdd },
+  components: { Card, BIcon, CardAdd, Button },
   beforeMount() {
     const token = localStorage.token;
 
@@ -53,6 +70,7 @@ export default {
       this.$store.dispatch("getOrders", {
         page: this.currentPage,
         limit: this.limit,
+        email: this.email,
       });
     } else {
       this.$router.push("/login");
@@ -71,6 +89,16 @@ export default {
       this.$store.dispatch("getOrders", {
         page: val,
         limit: this.limit,
+        email: this.email,
+      });
+    },
+  },
+  methods: {
+    search() {
+      this.$store.dispatch("getOrders", {
+        page: this.currentPage,
+        limit: this.limit,
+        email: this.email,
       });
     },
   },

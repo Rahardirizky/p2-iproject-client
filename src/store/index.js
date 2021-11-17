@@ -52,10 +52,14 @@ export default new Vuex.Store({
       commit("SET_LOADING", false);
     },
 
-    async getOrders({ commit, state }, {page, limit}) {
+    async getOrders({ commit, state }, {page, limit, email}) {
       commit("SET_LOADING", true);
       try {
         let url = `${BASE_URL}/orders?page=${page}&limit=${limit}`
+        
+        if(email) {
+          url += `&email=${email}`
+        }
         const { data } = await axios.get(url, {
           headers: {
             token: state.token,
