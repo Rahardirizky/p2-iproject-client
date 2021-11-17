@@ -32,6 +32,7 @@ import TextInput from "../components/TextInput.vue";
 import Button from "../components/Button.vue";
 
 export default {
+  name: "Login",
   components: {
     TextInput,
     Button,

@@ -2,7 +2,7 @@
   <div
     @click.prevent="onClick"
     class="btn"
-    style="background-color: #1a65d5;"
+    :style="`background-color: ${color ? color : '#1a65d5'};`"
   >
     <span class="btn-text">
       {{ title }}
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  props: ["onClick", "title"],
+  props: ["onClick", "title", "color"],
 };
 </script>
 
