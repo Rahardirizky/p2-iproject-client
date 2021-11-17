@@ -11,6 +11,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: null,
+    user: null,
     loading: false,
     error: null,
     orders: [],
@@ -35,6 +36,9 @@ export default new Vuex.Store({
     },
     SET_TOTAL_ORDERS(state, totalOrders) {
       state.totalOrders = totalOrders
+    },
+    SET_USER(state, user) {
+      state.user = user
     }
   },
   actions: {
@@ -43,7 +47,9 @@ export default new Vuex.Store({
       try {
         const { data } = await axios.post(`${BASE_URL}/login`, form);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         commit("SET_TOKEN", data.token);
+        commit("SET_USER", data.user);
         router.push("/");
       } catch (error) {
         const err = error.response.data.msg;
@@ -65,8 +71,12 @@ export default new Vuex.Store({
             token: state.token,
           },
         });
-        commit("SET_ORDERS", data.rows);
-        commit('SET_TOTAL_ORDERS', data.count)
+        if(state.user.role === 'Admin') {
+          commit("SET_ORDERS", data.rows);
+          commit('SET_TOTAL_ORDERS', data.count)
+        } else {
+          commit("SET_ORDERS", data);
+        }
       } catch (error) {
         const err = error.response.data.msg;
         commit("SET_ERROR", err);

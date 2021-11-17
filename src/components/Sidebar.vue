@@ -26,7 +26,9 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
       this.$store.commit("SET_TOKEN", null);
+      this.$store.commit("SET_USER", null);
       this.$router.push("/login");
     },
 
