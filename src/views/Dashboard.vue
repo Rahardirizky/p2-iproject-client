@@ -13,23 +13,47 @@
       <Card v-for="order in orders" :key="order.id" :order="order"> </Card>
       <CardAdd> </CardAdd>
     </div>
+    <div
+      style="
+        padding-left: 20px;
+        display: flex;
+        width: 100vw;
+        justify-content: center;
+      "
+    >
+      <b-pagination
+        v-model="currentPage"
+        :total-rows="totalOrders"
+        :per-page="limit"
+        aria-controls="my-table"
+      ></b-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 import { BIcon } from "bootstrap-vue";
 import Card from "../components/Card.vue";
-import CardAdd from "../components/CardAdd.vue"
+import CardAdd from "../components/CardAdd.vue";
 
 export default {
   name: "Dashboard",
+  data() {
+    return {
+      currentPage: 1,
+      limit: 4,
+    };
+  },
   components: { Card, BIcon, CardAdd },
   beforeMount() {
     const token = localStorage.token;
 
     if (token) {
       this.$store.commit("SET_TOKEN", token);
-      this.$store.dispatch("getOrders");
+      this.$store.dispatch("getOrders", {
+        page: this.currentPage,
+        limit: this.limit,
+      });
     } else {
       this.$router.push("/login");
     }
@@ -37,6 +61,17 @@ export default {
   computed: {
     orders() {
       return this.$store.state.orders;
+    },
+    totalOrders() {
+      return this.$store.state.totalOrders;
+    },
+  },
+  watch: {
+    currentPage(val) {
+      this.$store.dispatch("getOrders", {
+        page: val,
+        limit: this.limit,
+      });
     },
   },
 };

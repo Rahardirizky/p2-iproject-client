@@ -15,6 +15,7 @@ export default new Vuex.Store({
     error: null,
     orders: [],
     services: [],
+    totalOrders: 0,
   },
   mutations: {
     SET_LOADING(state, loading) {
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     SET_SERVICES(state, services) {
       state.services = services;
     },
+    SET_TOTAL_ORDERS(state, totalOrders) {
+      state.totalOrders = totalOrders
+    }
   },
   actions: {
     async login({ commit }, form) {
@@ -48,15 +52,17 @@ export default new Vuex.Store({
       commit("SET_LOADING", false);
     },
 
-    async getOrders({ commit, state }) {
+    async getOrders({ commit, state }, {page, limit}) {
       commit("SET_LOADING", true);
       try {
-        const { data } = await axios.get(`${BASE_URL}/orders`, {
+        let url = `${BASE_URL}/orders?page=${page}&limit=${limit}`
+        const { data } = await axios.get(url, {
           headers: {
             token: state.token,
           },
         });
-        commit("SET_ORDERS", data);
+        commit("SET_ORDERS", data.rows);
+        commit('SET_TOTAL_ORDERS', data.count)
       } catch (error) {
         const err = error.response.data.msg;
         commit("SET_ERROR", err);
