@@ -13,6 +13,9 @@ export default new Vuex.Store({
     token: null,
     loading: false,
     error: null,
+    orders: [],
+    services: [],
+    totalOrders: 0,
   },
   mutations: {
     SET_LOADING(state, loading) {
@@ -24,6 +27,15 @@ export default new Vuex.Store({
     SET_ERROR(state, error) {
       state.error = error;
     },
+    SET_ORDERS(state, orders) {
+      state.orders = orders;
+    },
+    SET_SERVICES(state, services) {
+      state.services = services;
+    },
+    SET_TOTAL_ORDERS(state, totalOrders) {
+      state.totalOrders = totalOrders
+    }
   },
   actions: {
     async login({ commit }, form) {
@@ -33,6 +45,102 @@ export default new Vuex.Store({
         localStorage.setItem("token", data.token);
         commit("SET_TOKEN", data.token);
         router.push("/");
+      } catch (error) {
+        const err = error.response.data.msg;
+        commit("SET_ERROR", err);
+      }
+      commit("SET_LOADING", false);
+    },
+
+    async getOrders({ commit, state }, {page, limit, email}) {
+      commit("SET_LOADING", true);
+      try {
+        let url = `${BASE_URL}/orders?page=${page}&limit=${limit}`
+        
+        if(email) {
+          url += `&email=${email}`
+        }
+        const { data } = await axios.get(url, {
+          headers: {
+            token: state.token,
+          },
+        });
+        commit("SET_ORDERS", data.rows);
+        commit('SET_TOTAL_ORDERS', data.count)
+      } catch (error) {
+        const err = error.response.data.msg;
+        commit("SET_ERROR", err);
+      }
+      commit("SET_LOADING", false);
+    },
+
+    async editOrder({ commit, dispatch, state }, { id, status, payment }) {
+      commit("SET_LOADING", true);
+      try {
+        await axios.put(
+          `${BASE_URL}/orders/${id}`,
+          { status, payment },
+          {
+            headers: {
+              token: state.token,
+            },
+          }
+        );
+        dispatch("getOrders");
+      } catch (error) {
+        const err = error.response.data.msg;
+        commit("SET_ERROR", err);
+      }
+      commit("SET_LOADING", false);
+    },
+
+    async getServices({ commit, state }) {
+      commit("SET_LOADING", true);
+      try {
+        const { data } = await axios.get(`${BASE_URL}/services`, {
+          headers: {
+            token: state.token,
+          },
+        });
+        const services = data.map((el) => ({
+          value: el.id,
+          text: el.name,
+        }));
+        commit("SET_SERVICES", services);
+      } catch (error) {
+        const err = error.response.data.msg;
+        commit("SET_ERROR", err);
+      }
+      commit("SET_LOADING", false);
+    },
+
+    async getTotalfee({ commit, state }, total) {
+      commit("SET_LOADING", true);
+      try {
+        const { data } = await axios.post(`${BASE_URL}/orders/total`, total, {
+          headers: {
+            token: state.token,
+          },
+        });
+        commit("SET_LOADING", false);
+        return +data * 1000;
+      } catch (error) {
+        const err = error.response.data.msg;
+        commit("SET_ERROR", err);
+      }
+      commit("SET_LOADING", false);
+      return null;
+    },
+
+    async addOrder({ commit, state, dispatch }, form) {
+      commit("SET_LOADING", true);
+      try {
+        await axios.post(`${BASE_URL}/orders`, form, {
+          headers: {
+            token: state.token,
+          },
+        });
+        dispatch('getOrders')
       } catch (error) {
         const err = error.response.data.msg;
         commit("SET_ERROR", err);

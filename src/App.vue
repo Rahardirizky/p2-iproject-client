@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Sidebar> </Sidebar>
     <div class="login-spinner" v-show="loading">
       <b-spinner variant="primary" type="grow"></b-spinner>
       <img
@@ -13,7 +14,12 @@
 </template>
 
 <script>
+import Sidebar from "./components/Sidebar.vue";
+
 export default {
+  components: {
+    Sidebar,
+  },
   computed: {
     loading() {
       return this.$store.state.loading;
@@ -32,6 +38,7 @@ export default {
 }
 
 .login-spinner {
+  z-index: 100;
   position: absolute;
   display: flex;
   top: 0;
