@@ -14,13 +14,19 @@
         "
       >
         <div>
-          <h4>{{ order.User.email }} </h4>
+          <h4>{{ order.User.email }}</h4>
           <b-card-text> Service Type: {{ order.Service.name }} </b-card-text>
           <b-card-text> Total Weight: {{ order.totalWeight }} </b-card-text>
           <b-card-text> Total Fee: {{ order.totalFee }} </b-card-text>
+          <b-card-text v-show="role === 'Customer'">
+            status: {{ order.status }}
+          </b-card-text>
         </div>
 
-        <div style="display: flex; justify-content: space-between">
+        <div
+          style="display: flex; justify-content: space-between"
+          v-show="role === 'Admin'"
+        >
           <Button
             :onClick="changeStatus"
             :title="status.title"
@@ -112,6 +118,11 @@ export default {
   beforeMount() {
     this.status = this.statuses.find((el) => el.title === this.order.status);
     this.payment = this.payments.find((el) => el.title === this.order.payment);
+  },
+  computed: {
+    role() {
+      return this.$store.state.user.role;
+    },
   },
 };
 </script>
