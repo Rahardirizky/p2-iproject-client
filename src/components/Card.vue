@@ -56,23 +56,23 @@ export default {
       statuses: [
         {
           title: "Drop",
-          color: "black",
+          color: "#081f37",
         },
         {
           title: "Wash",
-          color: "red",
+          color: "#5fc9f3",
         },
         {
           title: "Iron",
-          color: "blue",
+          color: "#2e79ba",
         },
         {
           title: "Pack",
-          color: "green",
+          color: "#1e549f",
         },
         {
           title: "Finish",
-          color: "yellow",
+          color: "#315b96",
         },
       ],
       status: null,

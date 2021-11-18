@@ -102,7 +102,6 @@ export default {
   },
   computed: {
     orders() {
-      console.log(this.$store.state.orders);
       return this.$store.state.orders;
     },
     totalOrders() {
