@@ -104,7 +104,6 @@ export default {
           ServiceId: this.form.ServiceId,
           totalWeight: this.form.totalWeight,
         })
-        console.log({totalFee});
         this.form.totalFee = totalFee
       }
     },
