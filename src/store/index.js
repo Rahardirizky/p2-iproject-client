@@ -4,7 +4,7 @@ import axios from "axios";
 
 import router from "../router";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://laundry-application.herokuapp.com/";
 
 Vue.use(Vuex);
 
