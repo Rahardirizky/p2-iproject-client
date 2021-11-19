@@ -50,6 +50,7 @@ export default {
       this.form[name] = value;
     },
     login() {
+      console.log(this.form);
       this.$store.dispatch("login", this.form);
     },
   },

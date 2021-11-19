@@ -4,7 +4,9 @@ import axios from "axios";
 
 import router from "../router";
 
-const BASE_URL = "https://laundry-application.herokuapp.com/";
+const BASE_URL = "https://laundry-application.herokuapp.com"
+
+// const BASE_URL='http://localhost:3000'
 
 Vue.use(Vuex);
 
@@ -46,6 +48,7 @@ export default new Vuex.Store({
       commit("SET_LOADING", true);
       try {
         const { data } = await axios.post(`${BASE_URL}/login`, form);
+        console.log({data});
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         commit("SET_TOKEN", data.token);
